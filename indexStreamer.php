@@ -25,19 +25,6 @@ include("header.php");
                 <button style="margin-top: 10px;" type="submit" name="submitVideo">Stream</button>
             </form>
         </div>
-        <div>
-            <a <?php
-            echo 'href="indexStreamer.php?link=' . $_SESSION["uid"] . '"';
-            ?>>watch!</a>
-
-            <?php
-            if (isset($_GET["error"])) {
-                if ($_GET["error"] == "emptyinput") {
-                    echo "<p>Error: empty field(s).</p>";
-                }
-            }
-            ?>
-        </div>
     </div>
 </div>
 

@@ -14,16 +14,35 @@ include("header.php");
     </div>
     <div>
         <h1>Front page</h1>
+        <!-- Get all currently streaming videos -->
         <?php
-        // $conn = mysqli_connect("localhost", "root", "79NrgJPadD6UV6", "twitch");
-        // $res = mysqli_query($conn, "SELECT * FROM streamers, stream, video WHERE streamers.StreamerID = stream.StreamerID AND stream.VideoID = video.VideoID");
-        // if (mysqli_num_rows($res) > 0) {
-        //     while ($row = mysqli_fetch_assoc($res)) {
-        //         echo "<p>" . $row["Name"] . "</p>";
-        //     }
-        // } else {
-        //     echo "none";
-        // }
+        
+        $db = new PDO("mysql:host=localhost;dbname=twitch", USERNAME, PASSWORD);
+        $stmt = $db->prepare("SELECT * FROM streamers, stream, videos WHEREstreamers.StreamerID = stream.StreamerID AND stream.VideoID = videos.VideoID");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                echo '
+                <div class="video-preview">
+                    <div class="info-bar">
+                        <div>
+                            <h2>' . $row["Title"] . '</h2>
+                        </div>
+                        <div>
+                            ' . $row["Streamer_uid"] . '
+                        </div>
+                    </div>
+                    <div class="watch-button">
+                        <a href="indexStreamer.php?link=' . $row["Streamer_uid"] . '">
+                        <button>Watch</button>
+                        </a>
+                    </div>
+                </div>';
+            }
+        } else {
+            echo "No one seems to be streaming for now...";
+        }
         ?>
     </div>
 </div>
