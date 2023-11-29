@@ -35,11 +35,11 @@ include("header.php");
 
         <!-- Display streamer's partners -->
         <?php
-        // if ($_SESSION["type"] == "streamer") {
-        //     echo "<h2>Followers</h2>";
-        //     $profile = new PartnerControl($_SESSION["uid"]);
-        //     $profile->findPartners();
-        // }
+        if ($_SESSION["type"] == "streamer") {
+            echo "<h2>Followers</h2>";
+            $profile = new PartnerControl($_SESSION["uid"]);
+            $profile->findPartners();
+        }
         ?>
     </div>
 </div>

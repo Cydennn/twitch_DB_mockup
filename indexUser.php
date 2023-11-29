@@ -18,7 +18,7 @@ include("header.php");
         <?php
         
         $db = new PDO("mysql:host=localhost;dbname=twitch", USERNAME, PASSWORD);
-        $stmt = $db->prepare("SELECT * FROM streamers, stream, videos WHEREstreamers.StreamerID = stream.StreamerID AND stream.VideoID = videos.VideoID");
+        $stmt = $db->prepare("SELECT * FROM streamers, stream, videos WHERE streamers.StreamerID = stream.StreamerID AND stream.VideoID = videos.VideoID");
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($rows) > 0) {

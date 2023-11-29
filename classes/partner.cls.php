@@ -15,7 +15,7 @@ class Partner extends Dbh
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($rows) > 0) {
             foreach ($rows as $row) {
-                echo "<p>" . $row["Name"] . "</p>";
+                echo "<p>" . $row["Brand_Name"] . "</p>";
             }
         } else {
             echo "none";
