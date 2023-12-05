@@ -35,8 +35,11 @@ include("header.php");
 
         <!-- Display streamer's partners -->
         <?php
+        include "classes/Dbh.cls.php";
+        include "classes/partner.cls.php";
+        include "classes/partnerControl.cls.php";
         if ($_SESSION["type"] == "streamer") {
-            echo "<h2>Followers</h2>";
+            echo "<h2>Partners</h2>";
             $profile = new PartnerControl($_SESSION["uid"]);
             $profile->findPartners();
         }
