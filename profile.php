@@ -19,7 +19,7 @@ include("header.php");
 <div style="margin-left: 120px; margin-right: 120px;" >
     <div class="profile-wrapper">
         <div>
-            <img class="profile-picture" src="./images/video1.png" alt="">
+            <img class="profile-picture" src="./images/placeholder.png" alt="">
         </div>
         <div>
             <div style="font-size: 30px;" >Khuong</div>
