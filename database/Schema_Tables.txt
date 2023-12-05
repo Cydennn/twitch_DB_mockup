@@ -1,0 +1,235 @@
+CREATE DATABASE IF NOT EXISTS StreamingPlatform;
+
+USE StreamingPlatform;
+
+-- Entity
+
+CREATE TABLE IF NOT EXISTS Users (
+    userID INT AUTO_INCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    dob DATE NOT NULL,
+    nationality VARCHAR(100) NOT NULL,
+    account_create_date DATE NOT NULL,
+    credit_card_number VARCHAR(100) NOT NULL,
+    profile_picture TEXT,
+    PRIMARY KEY (userID)
+);
+
+CREATE TABLE IF NOT EXISTS Streamers
+(
+    streamerID INT AUTO_INCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    dob DATE NOT NULL,
+    nationality VARCHAR(100) NOT NULL,
+    account_create_date DATE NOT NULL,
+    credit_card_number VARCHAR(100) NOT NULL,
+    profile_picture TEXT,
+    PRIMARY KEY (streamerID)
+);
+
+CREATE TABLE IF NOT EXISTS Brands
+(
+    brandID INT AUTO_INCREMENT,
+    name TEXT NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    PRIMARY KEY (brandID)
+);
+
+CREATE TABLE IF NOT EXISTS Videos
+(
+    videoID INT AUTO_INCREMENT,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL,
+    thumbnail TEXT NOT NULL,
+    peak_viewer INT,
+    average_viewer INT,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME,
+    PRIMARY KEY (videoID)
+);
+
+CREATE TABLE IF NOT EXISTS Genres
+(
+    genreID INT AUTO_INCREMENT,
+    name TEXT NOT NULL,
+    trending_score INT NOT NULL,
+    PRIMARY KEY (genreID)
+);
+
+CREATE TABLE IF NOT EXISTS Sponsorships
+(
+    sponsorshipID INT AUTO_INCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    minimum_time_req INT NOT NULL,
+    minimum_views_req INT NOT NULL,
+    payout INT NOT NULL,
+    expiration_date DATE NOT NULL,
+    website_url TEXT,
+    PRIMARY KEY (sponsorshipID)
+);
+
+CREATE TABLE IF NOT EXISTS Referral_codes
+(
+    sponsorshipID INT,
+    user_count INT NOT NULL,
+    PRIMARY KEY (sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Video_ads
+(
+    sponsorshipID INT,
+    PRIMARY KEY (sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Product_placements
+(
+    sponsorshipID INT,
+    name TEXT NOT NULL,
+    description TEXT,
+    PRIMARY KEY (sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Relationships
+
+CREATE TABLE IF NOT EXISTS Stream
+(
+    videoID INT,
+    streamerID INT NOT NULL,
+    PRIMARY KEY (videoID),
+    FOREIGN KEY (videoID) REFERENCES Videos(videoID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (streamerID) REFERENCES Streamers(streamerID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Offer
+(
+    sponsorshipID INT,
+    brandID INT NOT NULL,
+    PRIMARY KEY (sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (brandID) REFERENCES Brands(brandID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Follow
+(
+    userID INT,
+    streamerID INT,
+    start_date DATE NOT NULL,
+    PRIMARY KEY (userID, streamerID),
+    FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (streamerID) REFERENCES Streamers(streamerID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Subscribe
+(
+    userID INT,
+    streamerID INT,
+    start_date DATE NOT NULL,
+    PRIMARY KEY (userID, streamerID),
+    FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (streamerID) REFERENCES Streamers(streamerID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Donate
+(
+    userID INT,
+    streamerID INT,
+    donation_message TEXT,
+    donation_amount INT NOT NULL,
+    PRIMARY KEY (userID, streamerID),
+    FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (streamerID) REFERENCES Streamers(streamerID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Watch
+(
+    userID INT,
+    videoID INT,
+    PRIMARY KEY (userID, videoID),
+    FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (videoID) REFERENCES Videos(videoID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Partner
+(
+    streamerID INT,
+    brandID INT,
+    twitch_payment INT NOT NULL,
+    payment_per_viewer INT NOT NULL,
+    payment_per_code_user INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    PRIMARY KEY (streamerID, brandID),
+    FOREIGN KEY (streamerID) REFERENCES Streamers(streamerID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (brandID) REFERENCES Brands(brandID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Include
+(
+    videoID INT,
+    sponsorshipID INT,
+    PRIMARY KEY (videoID, sponsorshipID),
+    FOREIGN KEY (videoID) REFERENCES Videos(videoID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Has
+(
+    videoID INT,
+    genreID INT,
+    PRIMARY KEY (videoID, genreID),
+    FOREIGN KEY (videoID) REFERENCES Videos(videoID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (genreID) REFERENCES Genres(genreID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Multivalued
+
+CREATE TABLE IF NOT EXISTS Periods
+(
+    userID INT,
+    videoID INT,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    PRIMARY KEY (userID, videoID, start_time, end_time),
+    FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (videoID) REFERENCES Videos(videoID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Phone_numbers
+(
+    a_phone VARCHAR(25) NOT NULL,
+    brandID INT,
+    PRIMARY KEY (a_phone(25), brandID),
+    FOREIGN KEY (brandID) REFERENCES Brands(brandID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Addresses
+(
+    an_address TEXT NOT NULL,
+    brandID INT,
+    PRIMARY KEY (an_address(255), brandID),
+    FOREIGN KEY (brandID) REFERENCES Brands(brandID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Codes
+(
+    a_code VARCHAR(25) NOT NULL,
+    sponsorshipID INT,
+    PRIMARY KEY (a_code(25), sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Video_urls
+(
+    a_videoUrl TEXT NOT NULL,
+    sponsorshipID INT,
+    PRIMARY KEY (a_videoUrl(255), sponsorshipID),
+    FOREIGN KEY (sponsorshipID) REFERENCES Sponsorships(sponsorshipID) ON DELETE CASCADE ON UPDATE CASCADE
+);

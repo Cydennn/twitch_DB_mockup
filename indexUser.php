@@ -20,64 +20,76 @@ include("header.php");
     <!-- Get all currently streaming videos -->
     <div class="display-video-wrapper">
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
     </div>
     <div class="display-video-wrapper">
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
         <a href="" class="display-video">
-            <img class="thumbnail" src="./images/video1.png" alt="">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
             <div class="display-video-title">
-                4 CHINESES CAN'T WIN
+            T1 vs WBG | The Finals | Worlds 2023
             </div>
             <div class="display-video-desc">
-                <div>Posted by: T1 Faker</div>
+                <div>Currently live on: T1 Faker</div>
+                <div>10 views</div>
+            </div>
+        </a>
+    </div>
+    <div class="display-video-wrapper">
+        <a href="" class="display-video">
+            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
+            <div class="display-video-title">
+            T1 vs WBG | The Finals | Worlds 2023
+            </div>
+            <div class="display-video-desc">
+                <div>Currently live on: T1 Faker</div>
                 <div>10 views</div>
             </div>
         </a>
