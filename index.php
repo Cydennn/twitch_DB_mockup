@@ -3,15 +3,16 @@ include("header.php");
 ?>
 <div class="wrapper">
     <div class="login-box">
-        <h1>Login</h1>
-        <div style="text-align: center">
+        <div class="login-header">Welcome, please login</div>
+        <div class="divider"></div>
+        <div class="button-wrapper mb-mid">
             <a href="loginUser.php">
-                <button>Login as viewer</button>
+                <button class="login-button">Login as viewer</button>
             </a>
         </div>
-        <div>
+        <div class="button-wrapper mb-small">
             <a href="loginStreamer.php">
-                <button>Login as streamer</button>
+                <button class="login-button">Login as streamer</button>
             </a>
         </div>
     </div>

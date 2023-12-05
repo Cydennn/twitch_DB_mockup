@@ -14,3 +14,5 @@ class PartnerControl extends Partner
         $this->fetchPartners($this->uid);
     }
 }
+
+?>

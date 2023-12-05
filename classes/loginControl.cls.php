@@ -37,3 +37,5 @@ class LoginControl extends Login
         return $res;
     }
 }
+
+?>

@@ -16,3 +16,4 @@ class VideoControl extends Video
         $this->fetchVideo($this->uid, $this->url);
     }
 }
+?>

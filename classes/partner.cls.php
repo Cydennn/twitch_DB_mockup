@@ -22,3 +22,5 @@ class Partner extends Dbh
         }
     }
 }
+
+?>

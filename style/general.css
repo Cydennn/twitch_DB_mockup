@@ -1,6 +1,7 @@
 body {
-    background-color: rgb(79, 79, 79);
+    background-color: #080f25;
     margin: 0;
+    padding: 0;
     color: white;
     font-family: roboto, Arial;
     height: 100vh;

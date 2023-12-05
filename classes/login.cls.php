@@ -86,3 +86,5 @@ class Login extends Dbh
         $stmt = null;
     }
 }
+
+?>

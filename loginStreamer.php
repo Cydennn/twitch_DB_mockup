@@ -4,17 +4,17 @@ include("header.php");
 <script>document.title = "Viewer Login"</script>
 <div class="wrapper">
     <div class="login-box">
-        <div>
-            <h1>Streamer Login</h1>
+        <div class="mb-small">
+        <div class="login-header">Streamer login</div>
             <form action="includes/login.inc.php" method="post" class="login-form">
-                <input type="text" name="uid" placeholder="username/email">
-                <input type="password" name="pwd" placeholder="password">
-                <button style="margin-top: 10px;" type="submit" name="submitStreamer">Login</button>
+                <input class="text-input" type="text" name="uid" placeholder="username/email">
+                <input class="text-input" type="password" name="pwd" placeholder="password">
+                <button class="login-button" style="margin-top: 10px;" type="submit" name="submitStreamer">Login</button>
             </form>
         </div>
-        <div style="margin-top: 10px;">
-            <a href="loginUser.php">
-                Login as viewer instead?
+        <div>
+            <a class="link" href="loginUser.php">
+                Login as viewer
             </a>
         </div>
         <div>

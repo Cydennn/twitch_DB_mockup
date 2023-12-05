@@ -1,10 +1,13 @@
 <?php
-session_start();
+//session_start();
 include("header.php");
 ?>
 
-<div class="wrapper">
-    <div class="header">
+<div class="header">
+    <div style="margin-left: 15px;">
+        WELCOME, STREAMER
+    </div>
+    <div class="header-nav">
         <div class="header-items">
             <a style="color: inherit;text-decoration: none;" href="profile.php">PROFILE</a>
         </div>
@@ -12,50 +15,128 @@ include("header.php");
             <a style="color: inherit;text-decoration: none;" href="includes/logout.inc.php">LOGOUT</a>
         </div>
     </div>
-    <div class="streamer-menu">
-        <div>
-            <!-- query a new "stream" -->
-            <h1>Streamer menu</h1>
-            <form action="stream.inc.php" method="post" class="login-form">
-                <h2>Title</h2>
-                <input type="text" name="title" placeholder="title">
-                <h2>URL</h2>
-                <input type="text" name="url" placeholder="url">
-                <h2>Genre</h2>
-                <input type="text" name="genre" placeholder="genre(s)">
-                <!-- Crude implementation of sponsorships list, NYI -->
-                <?php
-
-                $db = new PDO("mysql:host=localhost;dbname=twitch", USERNAME, PASSWORD);
-                $stmt = $db->prepare("SELECT * FROM brands, offer, sponsorships WHERE brands.BrandID = offer.BrandID AND offer.SponsorshipsID = sponsorships.SponsorshipsID");
-                $stmt->execute();
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                if (count($rows) > 0) {
-                    foreach ($rows as $row) {
-                        echo '
-                <div class="sponsor-preview">
-                    <div class="info-bar">
-                        <div>
-                            <h2>' . $row["Sponsorship_Name"] . '</h2>
-                        </div>
-                        <div>
-                            ' . $row["Brand_Name"] . '
-                        </div>
-                    </div>
-                    <div>
-                    <input type="checkbox" name="' . $row["Sponsorship_Name"] . '">
-                    </div>
-                </div>';
-                    }
-                } else {
-                    echo "No sponsorship available";
-                }
-                ?>
-                <button style="margin-top: 10px;" type="submit" name="submitVideo">Stream</button>
-            </form>
-        </div>
-    </div>
 </div>
+<div class="streamer-menu">
+    <!-- query a new "stream" -->
+    <h1 style="width: 100%; text-align: center; margin-bottom: 0px;">Streamer menu</h1>
+    <form action="stream.inc.php" method="post" class="login-form">
+        <h2>Title</h2>
+        <input type="text" class="text-input" name="title" placeholder="title">
+        <h2>Genre</h2>
+        <select class="text-input" name="genre">
+            <option value="action">Action</option>
+            <option value="sandbox">Sandbox</option>
+            <option value="adventure">Adventure</option>
+        </select>
+        <!-- Crude implementation of sponsorships list, NYI -->
+        <div class="sponsor-wrapper">
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sponsor-wrapper">
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sponsor-container">
+                <div class="sponsor-name">Energy drink</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                    <div class="mb-small">It is delicious to drink and also very safe indeed dhffdfdsjkfajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</div>
+                    <div class="">Minimum stream time: 15 mins</div>
+                    <div class="">Minimum views: 10 views</div>
+                    <div style="display:flex; align-items: center; justify-content: center">
+                        <input type="checkbox" class="checkbox-streamer" name="sth">
+                        <p>Choose Sponsorship</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <button style="width: 40%;" class="login-button" type="submit" name="submitVideo">Start Streaming</button>
+        </div>
+    </form>
+</div>
+
+<!-- DELETED PHP PART (REUSE IF NEEDED)
+    $db = new PDO("mysql:host=localhost;dbname=twitch", USERNAME, PASSWORD);
+    $stmt = $db->prepare("SELECT * FROM brands, offer, sponsorships WHERE brands.BrandID = offer.BrandID AND offer.SponsorshipsID = sponsorships.SponsorshipsID");
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (count($rows) > 0) {
+        foreach ($rows as $row) {
+            echo '
+    <div class="sponsor-preview">
+        <div class="info-bar">
+            <div>
+                <h2>' . $row["Sponsorship_Name"] . '</h2>
+            </div>
+            <div>
+                ' . $row["Brand_Name"] . '
+            </div>
+        </div>
+        <div>
+        <input type="checkbox" name="' . $row["Sponsorship_Name"] . '">
+        </div>
+    </div>';
+        }
+    } else {
+        echo "No sponsorship available";
+    }
+-->
 
 <?php
 include("footer.php");
