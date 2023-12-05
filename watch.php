@@ -5,13 +5,11 @@ include("header.php");
 
 <!-- Display page content -->
 <?php
-include "classes/Dbh.cls.php";
-include "classes/video.cls.php";
-include "classes/videoControl.cls.php";
-$watch = new VideoControl($_GET["streamer"],$_GET["url"]);
+$watch = new VideoControl($_SESSION["uid"],$_GET["url"]);
 $watch->findVideo();
 ?>
 
+<!-- Follow & Subscribe NYI -->
 
 <?php
 include("footer.php");

@@ -1,8 +1,8 @@
 <?php
     define("HOST","localhost");
     define("USERNAME","root");
-    define("PASSWORD","79NrgJPadD6UV6");
-    define("DATABASE","streamingplatform");
+    define("PASSWORD","");
+    define("DATABASE","twitch");
 ?>
 
 <!DOCTYPE html>
