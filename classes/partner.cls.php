@@ -6,7 +6,7 @@ class Partner extends Dbh
     {
         $stmt = $this->connect()->prepare("SELECT Name FROM streamers, partner, brands WHERE streamers.StreamerID = ? AND streamers.StreamerID = partner.StreamerID AND partner.BrandID = brands.BrandID");
 
-        if (!$stmt->execute($uid)) {
+        if (!$stmt->execute(array($uid))) {
             $stmt = null;
             header("location: ../profile.php?error=stmtfailed");
             exit();
