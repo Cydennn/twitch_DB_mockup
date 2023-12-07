@@ -2,12 +2,12 @@
 
 INSERT INTO Users(username, password, email, dob, nationality, account_create_date, credit_card_number, profile_picture)
 VALUES
-    ('Do Duy Khuong', '123', 'duykhuong@gmail.com', '2003-11-03', 'Vietnam', '2023-11-25', '1234123412341234', './images/placeholder.png'),
-    ('Trinh Hoang Duy', '123', 'hoangduy@gmail.com', '2003-08-09', 'Vietnam', '2023-11-23', '8569301476123098', './images/placeholder.png'),
-    ('John Wick', '123', 'johnwick@gmail.com', '2000-03-15', 'USA', '2023-12-01', '2043985176254890', './images/placeholder.png'),
-    ('Alice Johnson', '123', 'alice.johnson22@gmail.com', '1999-02-02', 'USA', '2023-11-25', '7102983456219348', './images/placeholder.png'),
-    ('Robert Smith', '123', 'robert.smith0723@gmail.com', '2004-07-23', 'UK', '2023-11-26', '4398570126340982', './images/placeholder.png'),
-    ('Sophia Miller', '123', 'sophia.miller@gmail.com', '2001-05-09', 'UK', '2023-11-23', '7654321098765432', './images/placeholder.png');
+    ('khuong51', '123', 'duykhuong@gmail.com', '2003-11-03', 'Vietnam', '2023-11-25', '1234123412341234', './images/placeholder.png'),
+    ('Duy123', '123', 'hoangduy@gmail.com', '2003-08-09', 'Vietnam', '2023-11-23', '8569301476123098', './images/placeholder.png'),
+    ('John_Wick', '123', 'johnwick@gmail.com', '2000-03-15', 'USA', '2023-12-01', '2043985176254890', './images/placeholder.png'),
+    ('Alicejohnson', '123', 'alice.johnson22@gmail.com', '1999-02-02', 'USA', '2023-11-25', '7102983456219348', './images/placeholder.png'),
+    ('Roberto4', '123', 'robert.smith0723@gmail.com', '2004-07-23', 'UK', '2023-11-26', '4398570126340982', './images/placeholder.png'),
+    ('miller876', '123', 'sophia.miller@gmail.com', '2001-05-09', 'UK', '2023-11-23', '7654321098765432', './images/placeholder.png');
 
 INSERT INTO Streamers (username, password, email, dob, nationality, account_create_date, credit_card_number, profile_picture)
 VALUES
@@ -20,21 +20,21 @@ VALUES
 
 INSERT INTO Videos (title, url, thumbnail, peak_viewer, average_viewer, start_time, end_time)
 VALUES
-    ('T1 vs WBG | The Finals | Worlds 2023', './videos/video1.mp4', './images/thumbnail1.png', 2500, 1800, '2023-12-02 17:00:00', '2023-12-02 20:00:00'),
-    ('Minecraft Creative Building', './videos/video2.mp4', './images/thumbnail2.png', 1200, 900, '2023-12-05 19:00:00', '2023-12-05 22:00:00'),
-    ('FIFA 23 Career Mode', './videos/video3.mp4', './images/thumbnail3.png', 1600, 1100, '2023-12-01 14:30:00', '2023-12-01 17:00:00'),
-    ('Hearthstone Strategy Showdown', './videos/video4.mp4', './images/thumbnail4.png', 800, 600, '2023-12-15 12:00:00', '2023-12-15 14:30:00'),
-    ('Dota 2 All-Star Matches', './videos/video5.mp4', './images/thumbnail5.png', 2200, 1500, '2023-12-20 18:30:00', '2023-12-20 21:00:00'),
-    ('Retro Gaming: Super Mario Bros', './videos/video6.mp4', './images/thumbnail6.png', 1000, 700, '2023-12-25 16:00:00', '2023-12-25 19:00:00');
+    ('T1 vs WBG | The Finals | Worlds 2023', './videos/video1.mp4', './images/thumbnail1.png', 2, 2, '2023-12-02 17:00:00', '2023-12-02 20:00:00'),
+    ('Minecraft Creative Building', './videos/video2.mp4', './images/thumbnail2.png', 3, 3, '2023-12-05 19:00:00', '2023-12-05 22:00:00'),
+    ('FIFA 23 Career Mode', './videos/video3.mp4', './images/thumbnail3.png', 1, 1, '2023-12-01 14:30:00', '2023-12-01 17:00:00'),
+    ('Hearthstone Strategy Showdown', './videos/video4.mp4', './images/thumbnail4.png', 2, 2, '2023-12-15 12:00:00', '2023-12-15 14:30:00'),
+    ('Dota 2 All-Star Matches', './videos/video5.mp4', './images/thumbnail5.png', 3, 3, '2023-12-20 18:30:00', '2023-12-20 21:00:00'),
+    ('Retro Gaming: Super Mario Bros', './videos/video6.mp4', './images/thumbnail6.png', 1, 1, '2023-12-25 16:00:00', '2023-12-25 19:00:00');
 
 INSERT INTO Genres (name, trending_score)
 VALUES
-    ('Action', 85),
-    ('Adventure', 70),
-    ('Role-Playing', 92),
-    ('Strategy', 78),
-    ('Sports', 63),
-    ('Simulation', 80);
+    ('Action', 8.5),
+    ('Adventure', 7),
+    ('Role-Playing', 9.2),
+    ('Strategy', 7.8),
+    ('Sports', 6.3),
+    ('Simulation', 8);
 
 INSERT INTO Brands (name, email)
 VALUES
@@ -204,7 +204,7 @@ VALUES
 INSERT INTO Periods (userID, videoID, start_time, end_time)
 VALUES
     (2, 4, '2023-12-15 13:30:50', '2023-12-15 14:20:11'),
-    (2, 4, '2023-12-15 14:22:15', '2023-12-15 14:27:35'),
+    (2, 4, '2023-12-15 14:25:53', '2023-12-15 15:27:35'),
     (5, 1, '2023-12-01 17:05:03', '2023-12-01 18:02:07'),
     (5, 1, '2023-12-01 18:07:23', '2023-12-01 18:10:20'),
     (5, 1, '2023-12-01 19:15:55', '2023-12-01 19:54:06'),
@@ -225,7 +225,7 @@ VALUES
     (4, 5, '2023-12-20 18:42:15', '2023-12-20 21:00:00'),
     (1, 6, '2023-12-25 18:15:15', '2023-12-25 18:23:54'),
     (2, 1, '2023-12-01 18:45:01', '2023-12-01 19:03:01'),
-    (6, 2, '2023-12-05 21:22:06', '2023-12-05 21:45:01'),
+    (6, 2, '2023-12-05 20:59:06', '2023-12-05 21:45:01'),
     (6, 2, '2023-12-05 21:47:06', '2023-12-05 22:00:00');
 
 INSERT INTO Phone_numbers (a_phone, brandID)

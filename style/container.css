@@ -182,13 +182,17 @@
 
 .sponsor-wrapper{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
 .sponsor-container{
+    display: flex;
+    flex-direction: column;
+    /* height: fit-content; */
+    margin-bottom: 16px;
     width: 30%;
-    height: fit-content;
     border: 1px solid white;
 }
 
@@ -209,6 +213,7 @@
     border: 1px solid #e2e8f0;
     background-color: #718096;
     margin-right: 10px;
+    /* margin-top: auto; */
 }
 
 .profile-wrapper {
