@@ -4,7 +4,7 @@ class Login extends Dbh
 {
     protected function getUser($uid, $pwd)
     {
-        $stmt = $this->connect()->prepare("SELECT User_pwd FROM users WHERE User_uid = ? OR User_email = ?;");
+        $stmt = $this->connect()->prepare("SELECT `password` FROM users WHERE username = ? OR email = ?;");
 
         if (!$stmt->execute(array($uid, $uid))) {
             $stmt = null;
@@ -20,13 +20,13 @@ class Login extends Dbh
             exit();
         }
 
-        if ($pwd !== $loginData[0]["User_pwd"]) {
+        if ($pwd !== $loginData[0]["password"]) {
             $stmt = null;
             header("location: ../loginUser.php?error=wrongpassword");
             exit();
         }
 
-        $stmt = $this->connect()->prepare("SELECT * FROM users WHERE User_uid = ? OR User_email = ? AND User_pwd = ?;");
+        $stmt = $this->connect()->prepare("SELECT * FROM users WHERE username = ? OR email = ? AND password = ?;");
 
         if (!$stmt->execute(array($uid, $uid, $pwd))) {
             $stmt = null;
@@ -36,16 +36,16 @@ class Login extends Dbh
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         session_start();
-        $_SESSION["ID"] = $user["UserID"];
-        $_SESSION["uid"] = $user["User_uid"];
-        $_SESSION["email"] = $user["User_email"];
+        $_SESSION["ID"] = $user["userID"];
+        $_SESSION["uid"] = $user["username"];
+        $_SESSION["email"] = $user["email"];
         $_SESSION["type"] = "user";
 
         $stmt = null;
     }
     protected function getStreamer($uid, $pwd)
     {
-        $stmt = $this->connect()->prepare("SELECT Streamer_pwd FROM streamers WHERE Streamer_uid = ? OR Streamer_email = ?;");
+        $stmt = $this->connect()->prepare("SELECT password FROM streamers WHERE username = ? OR email = ?;");
 
         if (!$stmt->execute(array($uid, $uid))) {
             $stmt = null;
@@ -61,13 +61,13 @@ class Login extends Dbh
             exit();
         }
 
-        if ($pwd !== $loginData[0]["Streamer_pwd"]) {
+        if ($pwd !== $loginData[0]["password"]) {
             $stmt = null;
             header("location: ../loginStreamer.php?error=wrongpassword");
             exit();
         }
 
-        $stmt = $this->connect()->prepare("SELECT * FROM streamers WHERE Streamer_uid = ? OR Streamer_email = ? AND Streamer_pwd = ?;");
+        $stmt = $this->connect()->prepare("SELECT * FROM streamers WHERE username = ? OR email = ? AND password = ?;");
 
         if (!$stmt->execute(array($uid, $uid, $pwd))) {
             $stmt = null;
@@ -77,14 +77,12 @@ class Login extends Dbh
 
         $streamer = $stmt->fetch(PDO::FETCH_ASSOC);
         session_start();
-        $_SESSION["ID"] = $streamer["StreamerID"];
-        $_SESSION["uid"] = $streamer["Streamer_uid"];
-        $_SESSION["email"] = $streamer["Streamer_email"];
+        $_SESSION["ID"] = $streamer["streamerID"];
+        $_SESSION["uid"] = $streamer["username"];
+        $_SESSION["email"] = $streamer["email"];
         $_SESSION["type"] = "streamer";
 
 
         $stmt = null;
     }
 }
-
-?>

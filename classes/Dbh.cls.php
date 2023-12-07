@@ -5,7 +5,7 @@ class Dbh {
         try {
             $username = "root";
             $password = "79NrgJPadD6UV6";
-            $dbh = new PDO("mysql:host=localhost;dbname=twitch", $username, $password);
+            $dbh = new PDO("mysql:host=localhost;dbname=streamingplatform", $username, $password);
             return $dbh;
         } catch (PDOException $e) {
             print "Error: " . $e->getMessage() . "<br>";

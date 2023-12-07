@@ -1,6 +1,9 @@
 <?php
-//session_start();
+session_start();
 include("header.php");
+
+if ($_SESSION["type"] !== "user")
+    header("location: index.php");
 ?>
 
 <div class="header">
@@ -19,81 +22,39 @@ include("header.php");
 <div class="hero-index-user">
     <!-- Get all currently streaming videos -->
     <div class="display-video-wrapper">
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
+
+        <?php
+        $conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
+        $stmt = $conn->prepare(
+            "SELECT username, title, url, thumbnail, peak_viewer 
+            FROM streamers, stream, videos 
+            WHERE streamers.streamerID = stream.streamerID AND stream.videoID = videos.videoID;"
+        );
+
+        $stmt->execute();
+        $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($videos) > 0) {
+            foreach ($videos as $video) {
+                echo '
+            <a href="watch.php?url=' . $video["url"] . '" class="display-video">
+            <img class="thumbnail" src="' . $video["thumbnail"] . '" alt="">
             <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
+            ' . $video["title"] . '
             </div>
             <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
+                <div>Currently live on: ' . $video["username"] . '</div>
+                <div>' . $video["peak_viewer"] . ' views</div>
             </div>
-        </a>
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
+        </a>';
+            }
+        } else {
+            echo "No one seems to be streaming for now...";
+        }
+
+        ?>
     </div>
-    <div class="display-video-wrapper">
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
-    </div>
-    <div class="display-video-wrapper">
-        <a href="" class="display-video">
-            <img class="thumbnail" src="./images/thumbnail1.png" alt="">
-            <div class="display-video-title">
-            T1 vs WBG | The Finals | Worlds 2023
-            </div>
-            <div class="display-video-desc">
-                <div>Currently live on: T1 Faker</div>
-                <div>10 views</div>
-            </div>
-        </a>
-    </div>
+
 </div>
 
 <!-- DELETED PHP PART (REUSE IF NEEDED)
