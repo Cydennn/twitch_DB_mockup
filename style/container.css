@@ -185,6 +185,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .sponsor-container{
@@ -194,6 +195,7 @@
     margin-bottom: 16px;
     width: 30%;
     border: 1px solid white;
+    height: 25vh;
 }
 
 .sponsor-name{
@@ -207,7 +209,6 @@
 }
 
 .checkbox-streamer{
-    appearance: none;
     width: 20px;
     height: 20px;
     border: 1px solid #e2e8f0;

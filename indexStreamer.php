@@ -54,7 +54,7 @@ if ($_SESSION["type"] !== "streamer")
                 <div class="sponsor-container">
                     <div class="sponsor-name">' . $sponsor["sName"] . '</div>
                     <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
-                        <div class="mb-small">' . $sponsor["description"] . '</div>
+                        <div class="mb-small sponsor-description">' . $sponsor["description"] . '</div>
                         <div class="">Minimum stream time: ' . $sponsor["time"] . ' mins</div>
                         <div class="">Minimum views: ' . $sponsor["views"] . ' views</div>
                         <div style="display:flex; align-items: center; justify-content: center;">
