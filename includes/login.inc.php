@@ -1,4 +1,6 @@
 <?php
+include("../define.php");
+
 if (isset($_POST["submitUser"])) {
     $uid = $_POST["uid"];
     $pwd = $_POST["pwd"];
@@ -24,5 +26,5 @@ else if (isset($_POST["submitStreamer"])) {
     header("location: ../indexStreamer.php?error=none");
 }
 else {
-    header("location: ../index.php");
+    header("location: logout.inc.php");
 }

@@ -3,7 +3,7 @@ session_start();
 include("header.php");
 
 if ($_SESSION["type"] !== "user")
-    header("location: index.php");
+    header("location: includes/logout.inc.php");
 ?>
 
 <div class="header">
