@@ -1,9 +1,118 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 session_start();
 include("header.php");
+
+if (!isset($_SESSION["type"]))
+    header("location: includes/logout.inc.php");
+
+// users can only get here via clicking a link
+if (!isset($_GET["url"]))
+    header("location: indexUser.php");
+
+$conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
+
+// side bar
+$stmt = $conn->prepare(
+    "SELECT username, title, url, thumbnail, peak_viewer 
+    FROM streamers, stream, videos 
+    WHERE streamers.streamerID = stream.streamerID AND stream.videoID = videos.videoID AND url <> ?;"
+);
+
+$stmt->execute(array($_GET["url"]));
+$recvideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// fetch video
+$stmt = $conn->prepare(
+    "SELECT streamers.streamerID, username, profile_picture, title, url, thumbnail, peak_viewer, videos.videoID 
+            FROM streamers, stream, videos 
+            WHERE streamers.streamerID = stream.streamerID AND stream.videoID = videos.videoID AND url = ?;"
+);
+
+$stmt->execute(array($_GET["url"]));
+$video = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// fetch genres of said video
+$stmt = $conn->prepare(
+    "SELECT name 
+            FROM videos, has, genres 
+            WHERE videos.videoID = has.videoID AND has.genreID = genres.genreID AND url = ?;"
+);
+
+$stmt->execute(array($_GET["url"]));
+$genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// When user loads, query insert "watch" and "periods"
+if ($_SESSION["type"] == "user") {
+    // watch
+    $stmt = $conn->prepare(
+        "INSERT INTO watch (userID, videoID)
+        VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE videoID = videoID;"
+    );
+    $stmt->execute(array($_SESSION["ID"], $video["videoID"]));
+    // periods
+    $stmt = $conn->prepare(
+        "INSERT INTO periods (userID, videoID, start_time, end_time)
+        VALUES (?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE videoID = videoID;"
+    );
+    $stmt->execute(array($_SESSION["ID"], $video["videoID"], date('Y-m-d h:i:s'), DEFAULT_TIME));
+}
+
+// follow count
+$stmt = $conn->prepare(
+    "SELECT *
+    FROM users, follow, streamers 
+    WHERE streamers.streamerID = ? AND users.userID = follow.userID AND follow.streamerID = streamers.streamerID"
+);
+
+$stmt->execute(array($video["streamerID"]));
+$followCount = count($stmt->fetchAll(PDO::FETCH_ASSOC));
+
+// subscribe count
+$stmt = $conn->prepare(
+    "SELECT * 
+    FROM users, subscribe, streamers 
+    WHERE streamers.streamerID = ? AND users.userID = subscribe.userID AND subscribe.streamerID = streamers.streamerID"
+);
+
+$stmt->execute(array($video["streamerID"]));
+$subCount = count($stmt->fetchAll(PDO::FETCH_ASSOC));
+
+// Load the initial state of the 2 buttons on page load
+$followValue = $subscribeValue = "0";
+$followText = "Follow";
+$subscribeText = "Subscribe";
+
+// follow
+$stmt = $conn->prepare(
+    "SELECT *
+    FROM follow
+    WHERE streamerID = ? AND userID = ?"
+);
+$stmt->execute(array($video["streamerID"], $_SESSION["ID"]));
+if (count($stmt->fetchAll(PDO::FETCH_ASSOC)) > 0) {
+    $followValue = "1";
+    $followText = "Unfollow";
+}
+
+// subscribe
+$stmt = $conn->prepare(
+    "SELECT *
+    FROM subscribe
+    WHERE streamerID = ? AND userID = ?"
+);
+$stmt->execute(array($video["streamerID"], $_SESSION["ID"]));
+if (count($stmt->fetchAll(PDO::FETCH_ASSOC)) > 0) {
+    $subscribeValue = "1";
+    $subscribeText = "Unsubscribe";
+}
+
 ?>
 
-<!-- Display page content -->
 <!-- Header -->
 <div class="header">
     <div style="margin-left: 15px;">
@@ -15,76 +124,48 @@ include("header.php");
             <a style="color: inherit;text-decoration: none;" href="profile.php">PROFILE</a>
         </div>
         <div class="header-items">
+            <a style="color: inherit;text-decoration: none;" href="<?php
+            if ($_SESSION["type"] == "streamer") {
+                echo 'indexStreamer.php';
+            } else {
+                echo 'indexUser.php';
+            }
+            ?>">MAIN</a>
+        </div>
+        <div class="header-items">
             <a style="color: inherit;text-decoration: none;" href="includes/logout.inc.php">LOGOUT</a>
         </div>
     </div>
 </div>
 <div class="watch-wrapper">
     <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+    <div id="sidebar" class="sidebar-wrapper">
         <div class="recommended-title">Recommended</div>
-        <!-- Reuse query from frontpage -->
         <?php
-        $conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
-        $stmt = $conn->prepare(
-            "SELECT username, title, url, thumbnail, peak_viewer 
-            FROM streamers, stream, videos 
-            WHERE streamers.streamerID = stream.streamerID AND stream.videoID = videos.videoID AND url <> ?;"
-        );
-
-        $stmt->execute(array($_GET["url"]));
-        $recvideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         if (count($recvideos) > 0) {
             foreach ($recvideos as $recvideo) {
                 echo '
-                    <a href="watch.php?url=' . $recvideo["url"] . '" class="recommended-wrapper">
-                        <div style="margin-right: 10px;">
-                            <img class="small-thumbnail" src="' . $recvideo["thumbnail"] . '" alt="">
-                        </div>
-                        <div class="thumbnail-info-wrapper">
-                            <div class="thumbnail-title">' . $recvideo["title"] . '</div>
-                            <div class="thumbnail-streamer">' . $recvideo["username"] . '</div>
-                            <div class="thumbnail-viewers">' . $recvideo["peak_viewer"] . ' Viewers</div>
-                        </div>
-                    </a>
-                ';
+        <a href="watch.php?url=' . $recvideo["url"] . '" class="recommended-wrapper">
+        <div style="margin-right: 10px;">
+        <img class="small-thumbnail" src="' . $recvideo["thumbnail"] . '" alt="">
+        </div>
+        <div class="thumbnail-info-wrapper">
+        <div class="thumbnail-title">' . $recvideo["title"] . '</div>
+        <div class="thumbnail-streamer">' . $recvideo["username"] . '</div>
+        <div class="thumbnail-viewers">' . $recvideo["peak_viewer"] . ' Viewers</div>
+        </div>
+        </a>
+        ';
             }
         } else {
-            echo "No one seems to be streaming for now...";
+            echo "No one else seems to be streaming for now...";
         }
         ?>
-        
+
     </div>
+    <!-- Display page content -->
     <!-- Video -->
     <div class="video-wrapper">
-        <?php
-        // users can only get here via clicking a link
-        if (!isset($_GET["url"]))
-            header("location: ../indexUser.php");
-
-        // fetch video
-        $conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
-        $stmt = $conn->prepare(
-            "SELECT streamers.streamerID AS stID, username, profile_picture, title, url, thumbnail, peak_viewer 
-            FROM streamers, stream, videos 
-            WHERE streamers.streamerID = stream.streamerID AND stream.videoID = videos.videoID AND url = ?;"
-        );
-
-        $stmt->execute(array($_GET["url"]));
-        $video = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // fetch genres of said video
-        $stmt = $conn->prepare(
-            "SELECT name 
-            FROM videos, has, genres 
-            WHERE videos.videoID = has.videoID AND has.genreID = genres.genreID AND url = ?;"
-        );
-
-        $stmt->execute(array($_GET["url"]));
-        $genres = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-
         <div>
             <video class="video-watch" controls>
                 <source src="<?php echo $video["url"] ?>" type="video/mp4">
@@ -114,27 +195,6 @@ include("header.php");
                         <?php echo $video["username"] ?>
                     </div>
                     <!-- Reuse follow & sub query from profile -->
-                    <?php
-                    // follow
-                    $stmt = $conn->prepare(
-                        "SELECT *
-                        FROM users, follow, streamers 
-                        WHERE streamers.streamerID = ? AND users.userID = follow.userID AND follow.streamerID = streamers.streamerID"
-                    );
-
-                    $stmt->execute(array($video["stID"]));
-                    $followCount = count($stmt->fetchAll(PDO::FETCH_ASSOC));
-
-                    // subscribe
-                    $stmt = $conn->prepare(
-                        "SELECT * 
-                        FROM users, subscribe, streamers 
-                        WHERE streamers.streamerID = ? AND users.userID = subscribe.userID AND subscribe.streamerID = streamers.streamerID"
-                    );
-
-                    $stmt->execute(array($video["stID"]));
-                    $subCount = count($stmt->fetchAll(PDO::FETCH_ASSOC));
-                    ?>
                     <div>
                         Followers:
                         <?php echo $followCount ?> | Subscribers:
@@ -144,21 +204,80 @@ include("header.php");
             </div>
             <div class="follow-and-subscribe-wrapper">
                 <div style="margin-bottom: 5px;">
-                    <button class="follow-and-subscribe-button">Follow</button>
-                    <button class="follow-and-subscribe-button">Subscribe</button>
+                    <!-- Check if current user is follow/subscribing -->
+                    <?php
+
+                    ?>
+
+                    <button id="toggle-follow" class="follow-and-subscribe-button" value="<?php echo $followValue ?>">
+                        <?php echo $followText ?>
+                    </button>
+                    <button id="toggle-subscribe" class="follow-and-subscribe-button"
+                        value="<?php echo $subscribeValue ?>">
+                        <?php echo $subscribeText ?>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Follow & Subscribe NYI -->
+<script>
+    $(document).ready(function () {
+        var sID = <?php echo $video["streamerID"] ?>;
+        var vUrl = '<?php echo $video["url"] ?>';
+        var vID = <?php echo $video["videoID"] ?>;
+        // only used when user is viewer
+        var uID = <?php echo $_SESSION["ID"] ?>;
+        var userType = "<?php echo $_SESSION["type"] ?>";
+
+        // follow & subscribe
+        var fol = $("#toggle-follow");
+        var sub = $("#toggle-subscribe");
+        var sidebar = $("#sidebar");
+
+        // hide UIs not for streamer
+        if (userType == "streamer") {
+            sidebar.hide();
+            fol.hide();
+            sub.hide();
+        }
+
+        // When user leaves, query update "periods" end time
+        // When streamer leaves, query update "videos" end time
+        $(window).bind('beforeunload', function () {
+            $.ajax({
+                type: "POST",
+                url: "includes/unwatch.inc.php",
+                data: { type: userType, url: vUrl, streamer: sID, user: uID, video: vID },
+                async: false
+            });
+        });
+
+        // toggle them
+        fol.click(function () {
+            if (fol.val() == "0") {
+                fol.val("1");
+                fol.load("includes/follow.inc.php", { type: "fol", func: "insert", streamer: sID, user: uID });
+            } else {
+                fol.val("0");
+                fol.load("includes/follow.inc.php", { type: "fol", func: "delete", streamer: sID, user: uID });
+            }
+
+        });
+
+        sub.click(function () {
+            if (sub.val() == "0") {
+                sub.val("1");
+                sub.load("includes/follow.inc.php", { type: "sub", func: "insert", streamer: sID, user: uID });
+            } else {
+                sub.val("0");
+                sub.load("includes/follow.inc.php", { type: "sub", func: "delete", streamer: sID, user: uID });
+            }
+        });
+    });
+</script>
 
 <?php
 include("footer.php");
 ?>
-
-<!-- 
-    $watch = new VideoControl($_SESSION["uid"],$_GET["url"]);
-    $watch->findVideo();
- -->
