@@ -1,0 +1,61 @@
+DELIMITER //
+CREATE TRIGGER Check_sponsorship_expiration_date
+BEFORE INSERT ON include
+FOR EACH ROW
+BEGIN
+DECLARE sponsorship_expire_date DATE;
+SELECT expiration_date INTO sponsorship_expire_date
+FROM sponsorships
+WHERE sponsorshipID = NEW.sponsorshipID;
+IF sponsorship_expire_date IS NOT NULL AND sponsorship_expire_date < CURDATE() 
+THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Cannot include an expired sponsorship';
+END IF;
+END //
+
+CREATE TRIGGER Join_partner
+AFTER INSERT ON include
+FOR EACH ROW
+BEGIN
+    DECLARE streamer_id INT;
+    DECLARE brand_id INT;
+
+    -- Get streamerID
+    SELECT stream.streamerID INTO streamer_id
+    FROM videos, stream
+    WHERE videos.videoID = NEW.videoID AND stream.videoID = videos.videoID;
+
+    -- Get brandID
+    SELECT o.brandID INTO brand_id
+    FROM sponsorships sp
+    JOIN offer o ON sp.sponsorshipID = o.sponsorshipID
+    WHERE sp.sponsorshipID = NEW.sponsorshipID;
+
+    -- Insert into partner table
+    INSERT INTO partner (streamerID, brandID, twitch_payment, payment_per_viewer, payment_per_code_user, start_date, end_date)
+    VALUES (streamer_id, brand_id, 50, 0.1, 0.5, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 YEAR));
+END //
+
+CREATE TRIGGER Viewer_increase
+AFTER INSERT ON periods
+FOR EACH ROW
+BEGIN
+UPDATE videos v SET average_view = average_view + 1 WHERE v.videoID = NEW.videoID;
+END //
+
+CREATE TRIGGER Viewer_decrease
+AFTER UPDATE ON periods
+FOR EACH ROW
+BEGIN
+UPDATE videos v SET average_view = average_view - 1 WHERE v.videoID = NEW.videoID;
+END //
+
+CREATE TRIGGER Peak_viewer
+AFTER UPDATE ON watch
+FOR EACH ROW
+BEGIN
+UPDATE videos v SET peak_view = peak_view + 1 WHERE v.videoID = NEW.videoID;
+END //
+
+DELIMITER ;

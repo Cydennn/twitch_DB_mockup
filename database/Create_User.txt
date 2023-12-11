@@ -1,0 +1,19 @@
+CREATE ROLE administrator;
+CREATE ROLE management;
+CREATE ROLE production;
+CREATE ROLE read_only;
+
+GRANT ALL PRIVILEGES ON streamingplatform.* TO admin WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON streamingplatform.* TO management;
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON streamingplatform.* TO production;
+GRANT SELECT ON streamingplatform.* TO read_only;
+
+CREATE USER 'admin1' IDENTIFIED BY 'abcd';
+CREATE USER 'manage1' IDENTIFIED BY 'efgh';
+CREATE USER 'prod1' IDENTIFIED BY '1234';
+CREATE USER 'read1' IDENTIFIED BY '5678';
+
+GRANT administrator to 'admin1';
+GRANT management to 'manage1';
+GRANT production to 'prod1';
+GRANT read_only to 'read1';

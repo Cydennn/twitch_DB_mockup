@@ -1,0 +1,96 @@
+DELIMITER //
+
+CREATE PROCEDURE GetSatisfiedSponsoredVideos()
+BEGIN
+	SELECT v.videoID, i.sponsorshipID
+	FROM Videos v
+	JOIN Include i ON v.videoID = i.videoID
+	JOIN Sponsorships s ON i.sponsorshipID = s.sponsorshipID
+	WHERE TIMESTAMPDIFF(MINUTE, v.start_time, COALESCE(v.end_time, NOW())) >= s.minimum_time_req
+	AND v.peak_viewer >= s.minimum_views_req;
+END //
+
+CREATE PROCEDURE GetStreamersTotalViews()
+BEGIN
+	CREATE TEMPORARY TABLE TempWatchCounts AS
+	SELECT videoID, COUNT(*) AS views_count
+	FROM Watch
+	GROUP BY videoID;
+
+	CREATE TEMPORARY TABLE TempStreamers AS
+	SELECT t.videoID, s.streamerID, views_count
+	FROM TempWatchCounts t
+	JOIN Stream s ON t.videoID = s.videoID;
+    
+	CREATE TEMPORARY TABLE TotalViews AS
+	SELECT streamerID, SUM(views_count) AS total_views
+	FROM TempStreamers
+	GROUP BY streamerID;
+   
+	SELECT * FROM TotalViews;
+    
+	DROP TEMPORARY TABLE IF EXISTS TempWatchCounts;
+	DROP TEMPORARY TABLE IF EXISTS TempStreamers;
+	DROP TEMPORARY TABLE IF EXISTS TotalViews;
+END //
+
+CREATE PROCEDURE GetHighestStreamerDonationPerSub()
+BEGIN
+	CREATE TEMPORARY TABLE StreamersTotalDonateReceived AS
+	SELECT streamerID, SUM(donation_amount) AS total_donation
+	FROM Donate
+	GROUP BY streamerID;
+
+	CREATE TEMPORARY TABLE StreamersTotalSubscribers AS
+	SELECT streamerID, COUNT(*) AS subscribers
+	FROM Subscribe
+	GROUP BY streamerID;
+
+	CREATE TEMPORARY TABLE StreamersDonateAndSubs AS
+	SELECT a.streamerID, total_donation, subscribers
+	FROM StreamersTotalDonateReceived a
+	JOIN StreamersTotalSubscribers b ON a.streamerID = b.streamerID;
+
+	SELECT streamerID, CAST(total_donation / subscribers AS DOUBLE) AS donation_per_sub 
+	FROM StreamersDonateAndSubs
+	ORDER BY donation_per_sub DESC
+	LIMIT 1;
+
+	DROP TEMPORARY TABLE IF EXISTS StreamersTotalDonateReceived;
+	DROP TEMPORARY TABLE IF EXISTS StreamersTotalSubscribers;
+	DROP TEMPORARY TABLE IF EXISTS StreamersDonateAndSubs;
+END //
+
+CREATE PROCEDURE GetStreamersCodeUserPayment()
+BEGIN
+	CREATE TEMPORARY TABLE StreamersTotalPaymentPerCodeUser AS
+	SELECT a.videoID, a.sponsorshipID, b.user_count * d.payment_per_code_user AS total_payment_per_code_user, c.streamerID, d.brandID
+	FROM include a
+	JOIN referral_codes b ON a.sponsorshipID = b.sponsorshipID
+	JOIN stream c ON a.videoID = c.videoID
+	JOIN partner d ON c.streamerID = d.streamerID;
+
+	SELECT streamerID, SUM(total_payment_per_code_user) AS code_user_payment
+	FROM StreamersTotalPaymentPerCodeUser
+	GROUP BY streamerID;
+
+	DROP TEMPORARY TABLE IF EXISTS StreamersTotalPaymentPerCodeUser;
+END //
+
+CREATE PROCEDURE GetBrandsTotalViewers()
+BEGIN
+	CREATE TEMPORARY TABLE ViewersPerVideo AS
+	SELECT videoID, COUNT(*) AS viewers
+	FROM watch
+	GROUP BY videoID;
+
+	SELECT brandID, SUM(viewers) AS total_viewers
+	FROM ViewersPerVideo a
+	NATURAL JOIN include
+	NATURAL JOIN offer
+	GROUP BY brandID;
+
+	DROP TEMPORARY TABLE IF EXISTS ViewersPerVideo;
+END //
+
+DELIMITER ;
