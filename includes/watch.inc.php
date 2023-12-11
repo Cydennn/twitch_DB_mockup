@@ -51,15 +51,6 @@ $stmt->execute(
 // fetch the new video's ID
 $videoID = $conn->lastInsertId();
 
-// add sponsorships
-foreach ($_POST["sID"] as $sID) {
-    $stmt = $conn->prepare(
-        "INSERT INTO include (videoID, sponsorshipID)
-        VALUES (?, ?);"
-    );
-    $stmt->execute(array($videoID, $sID));
-}
-
 // stream
 $stmt = $conn->prepare(
     "INSERT INTO stream (streamerID, videoID)
@@ -68,4 +59,20 @@ $stmt = $conn->prepare(
 );
 $stmt->execute(array($_POST["streamerID"], $videoID));
 
-header("location: ../watch.php?url=" . $url);
+// add sponsorships
+$errormsg = "none";
+foreach ($_POST["sID"] as $sID) {
+    try {
+
+        $stmt = $conn->prepare(
+            "INSERT INTO include (videoID, sponsorshipID)
+        VALUES (?, ?);"
+        );
+        $stmt->execute(array($videoID, $sID));
+    } catch (PDOException $e) {
+        $errormsg = "sponsor";
+        continue;
+    }
+}
+
+header("location: ../watch.php?url=" . $url . "&error=" . $errormsg);

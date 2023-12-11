@@ -12,6 +12,10 @@ if (!isset($_SESSION["type"]))
 if (!isset($_GET["url"]))
     header("location: indexUser.php");
 
+if (isset($_GET["error"]) && $_GET["error"] == "sponsor") {
+    echo '<script type="text/javascript">alert("Some expired sponsorships were omitted.");</script>';
+}
+
 $conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
 
 // side bar

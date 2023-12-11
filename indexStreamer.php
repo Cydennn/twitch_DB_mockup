@@ -3,11 +3,11 @@ session_start();
 include("header.php");
 
 if ($_SESSION["type"] !== "streamer")
-    header("location: includes/logout.inc.php");
-
-$conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
-$stmt = $conn->prepare(
-    "SELECT sponsorships.sponsorshipID AS sID,
+header("location: includes/logout.inc.php");
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=streamingplatform", USERNAME, PASSWORD);
+    $stmt = $conn->prepare(
+        "SELECT sponsorships.sponsorshipID AS sID,
         sponsorships.name AS sName,
         description,
         minimum_time_req AS time,
@@ -24,6 +24,11 @@ $stmt = $conn->prepare(
 );
 $stmt->execute();
 $genreslist = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+catch (PDOException $e) {
+    print "Error: " . $e->getMessage() . "<br>";
+    die();
+}
 ?>
 
 <div class="header">
@@ -59,30 +64,30 @@ $genreslist = $stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
         </select>
         <!-- sponsorships list -->
-
+        
         <div class="sponsor-wrapper">
             <?php
             foreach ($sponsors as $sponsor) {
                 echo '
                 <div class="sponsor-container">
-                    <div class="sponsor-name">' . $sponsor["sName"] . '</div>
-                    <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
-                        <div class="mb-small sponsor-description">' . $sponsor["description"] . '</div>
-                        <div class="">Minimum stream time: ' . $sponsor["time"] . ' mins</div>
-                        <div class="">Minimum views: ' . $sponsor["views"] . ' views</div>
-                        <div style="display:flex; align-items: center; justify-content: center;">
-                            <input type="checkbox" class="checkbox-streamer" name="sID[]" value="' . $sponsor["sID"] . '">
-                            <label>Choose Sponsorship</label>
-                        </div>
-                    </div>
+                <div class="sponsor-name">' . $sponsor["sName"] . '</div>
+                <div style="margin-left: 10px; margin-right: 10px; text-align: justify;">
+                <div class="mb-small sponsor-description">' . $sponsor["description"] . '</div>
+                <div class="">Minimum stream time: ' . $sponsor["time"] . ' mins</div>
+                <div class="">Minimum views: ' . $sponsor["views"] . ' views</div>
+                <div style="display:flex; align-items: center; justify-content: center;">
+                <input type="checkbox" class="checkbox-streamer" name="sID[]" value="' . $sponsor["sID"] . '">
+                <label>Choose Sponsorship</label>
+                </div>
+                </div>
                 </div>
                 ';
             }
             ?>
         <!-- streamerID -->
         <input type="hidden" name="streamerID" value="<?php echo $_SESSION["ID"] ?>">
-        </div>
-        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+    </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 30px;">
             <button style="width: 40%;" class="login-button" type="submit" name="submitVideo">Start Streaming</button>
         </div>
     </form>
